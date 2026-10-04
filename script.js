@@ -8,6 +8,7 @@ const message = document.getElementById("message");
 const canvas = document.getElementById("qr-canvas");
 const qrButton = document.getElementById("qr-button");
 const qrUrl = document.getElementById("qr-url");
+const statusText = document.getElementById("status");
 
 function showMessage(text) {
   message.textContent = text;
@@ -20,6 +21,14 @@ function normalizeUrl(value) {
 
   try {
     const url = new URL(withProtocol);
+    // 아이디·비밀번호(@)가 들어간 주소(예: 이메일 주소, mailto:)는 거름
+    if (url.username || url.password) {
+      return null;
+    }
+    // 도메인에는 영문·숫자·점(.)·하이픈(-)만 있어야 함 (한글 도메인은 xn--로 시작하는 형태로 바뀐 뒤 검사됨)
+    if (!/^[a-z0-9.-]+$/.test(url.hostname)) {
+      return null;
+    }
     // 점(.)이 없는 주소(예: "hello")는 웹사이트 주소가 아니므로 거름
     if (!url.hostname.includes(".") && url.hostname !== "localhost") {
       return null;
@@ -65,6 +74,13 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
+  // 한글 자음·모음(예: ㅈㅈㅈ)이 섞여 있으면 한/영 키가 한글로 되어 있는 경우가 많음
+  if (/[ㄱ-ㅎㅏ-ㅣ]/.test(input.value)) {
+    showMessage("한/영 키를 확인해 주세요. 주소는 영문으로 입력해야 합니다.");
+    input.focus();
+    return;
+  }
+
   const url = normalizeUrl(input.value);
   if (!url) {
     showMessage("올바른 웹사이트 주소를 입력해 주세요. (예: www.sdu.ac.kr)");
@@ -83,6 +99,7 @@ form.addEventListener("submit", (event) => {
 
   showMessage("");
   qrUrl.textContent = url;
+  statusText.textContent = `QR코드가 만들어졌습니다: ${url}`;
   document.body.classList.add("is-generated"); // 입력창은 아래로, QR코드는 가운데에 나타남
 });
 

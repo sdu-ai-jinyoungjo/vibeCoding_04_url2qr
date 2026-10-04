@@ -12,7 +12,8 @@
   --muted: #6b7280;
   --accent: #ffc107; /* 로고의 노란색 */
   --accent-dark: #ffb300;
-  --error: #dc2626;
+  --error: #991b1b; /* 밝은 배경에서도 잘 읽히는 진한 빨강 */
+  --qr-size: min(260px, 60vw, 38vh); /* 화면에 보이는 QR코드 크기 */
 }
 
 body {
@@ -78,7 +79,7 @@ body {
 }
 
 .url-form:focus-within {
-  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.5), 0 8px 32px rgba(31, 41, 55, 0.08);
+  box-shadow: 0 0 0 2px #b45309, 0 8px 32px rgba(31, 41, 55, 0.08);
 }
 
 .url-input {
@@ -94,7 +95,7 @@ body {
 }
 
 .url-input::placeholder {
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .generate-button {
@@ -127,12 +128,17 @@ body {
   outline-offset: 3px;
 }
 
+/* 안내 문구는 입력창 바로 아래에 따로 띄워서, 문구가 길어져도 입력창이 움직이지 않게 함 */
 .message {
-  min-height: 1.5em;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
   margin-top: 10px;
   color: var(--error);
   font-size: 14px;
   text-align: center;
+  word-break: keep-all;
 }
 
 /* 생성된 QR코드: 화면 정중앙 */
@@ -180,7 +186,7 @@ body {
 
 .qr-canvas {
   display: block;
-  width: min(260px, 60vw, 38vh);
+  width: var(--qr-size);
   height: auto;
   border-radius: 8px;
 }
@@ -194,7 +200,7 @@ body {
 }
 
 .qr-url {
-  max-width: min(260px, 60vw);
+  max-width: var(--qr-size);
   overflow: hidden;
   color: var(--muted);
   font-size: 12px;
@@ -211,10 +217,46 @@ body {
   white-space: nowrap;
 }
 
-/* 세로가 짧은 화면: QR코드와 입력창이 겹치지 않게 높이 확보 */
+/* 세로가 짧은 화면(노트북의 작은 창, 휴대폰 가로 등): 모두 한 화면에 들어오도록 작게 */
 @media (max-height: 620px) {
-  .main {
-    min-height: 620px;
+  :root {
+    --qr-size: min(260px, 60vw, 34vh);
+  }
+
+  .header {
+    top: 12px;
+    left: 16px;
+  }
+
+  .logo {
+    height: 32px;
+  }
+
+  .url-input {
+    padding: 10px 14px;
+  }
+
+  .is-generated .input-area {
+    top: calc(100% - 80px);
+  }
+
+  /* QR코드는 입력창 위쪽 공간의 가운데 */
+  .qr-area {
+    top: calc((100% - 120px) / 2);
+  }
+
+  .qr-card {
+    gap: 6px;
+    padding: 12px 16px;
+    border-radius: 16px;
+  }
+
+  .instruction {
+    font-size: 12px;
+  }
+
+  .qr-url {
+    font-size: 11px;
   }
 }
 

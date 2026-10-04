@@ -9,6 +9,7 @@
 <body>
   <!-- 왼쪽 위 로고 -->
   <header class="header">
+    <h1 class="visually-hidden">QR 코드 생성기</h1>
     <img class="logo" src="img/logo.png" alt="URL2QR">
   </header>
 
@@ -29,12 +30,15 @@
       <form class="url-form" id="url-form" novalidate>
         <label class="visually-hidden" for="url-input">웹사이트 주소</label>
         <input class="url-input" id="url-input" type="url"
-               placeholder="웹사이트 URL을 입력하세요 (예: www.sdu.ac.kr)"
+               placeholder="URL을 입력하세요"
                autocomplete="url" autocapitalize="off" spellcheck="false" autofocus>
         <button class="generate-button" type="submit">생성하기</button>
       </form>
       <p class="message" id="message" role="alert"></p>
     </section>
+
+    <!-- 화면 낭독기에만 읽어 주는 안내 -->
+    <p class="visually-hidden" id="status" role="status"></p>
   </main>
 
   <!-- QR코드 라이브러리: qrcode-generator -->
