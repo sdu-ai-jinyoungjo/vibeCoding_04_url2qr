@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR 코드 생성기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 왼쪽 위 로고 -->
+  <header class="header">
+    <img class="logo" src="img/logo.png" alt="URL2QR">
+  </header>
+
+  <main class="main">
+    <!-- 생성된 QR코드: 화면 정중앙에 나타남 -->
+    <section class="qr-area">
+      <div class="qr-card">
+        <button class="qr-button" id="qr-button" type="button" aria-label="QR코드를 JPG 파일로 다운로드">
+          <canvas class="qr-canvas" id="qr-canvas" width="290" height="290"></canvas>
+        </button>
+        <p class="instruction">QR코드를 클릭하면 JPG로 다운로드됩니다</p>
+        <p class="qr-url" id="qr-url"></p>
+      </div>
+    </section>
+
+    <!-- URL 입력창: 처음엔 가운데, QR코드를 만들면 아래로 내려감 -->
+    <section class="input-area">
+      <form class="url-form" id="url-form" novalidate>
+        <label class="visually-hidden" for="url-input">웹사이트 주소</label>
+        <input class="url-input" id="url-input" type="url"
+               placeholder="웹사이트 URL을 입력하세요 (예: www.sdu.ac.kr)"
+               autocomplete="url" autocapitalize="off" spellcheck="false" autofocus>
+        <button class="generate-button" type="submit">생성하기</button>
+      </form>
+      <p class="message" id="message" role="alert"></p>
+    </section>
+  </main>
+
+  <!-- QR코드 라이브러리: qrcode-generator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"
+          integrity="sha512-ZDSPMa/JM1D+7kdg2x3BsruQ6T/JpJo3jWDWkCZsP+5yVyp1KfESqLI+7RqB5k24F7p2cV7i2YHh/890y6P6Sw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="script.js"></script>
+</body>
+</html>

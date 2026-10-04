@@ -1,0 +1,245 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --mouse-x: 30%;
+  --mouse-y: 30%;
+  --hue: 200;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --accent: #ffc107; /* 로고의 노란색 */
+  --accent-dark: #ffb300;
+  --error: #dc2626;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--text);
+  font-family: "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", Arial, sans-serif;
+  background-color: #fffaf0;
+  /* 마우스를 따라오는 노란빛 + 반대편의 하늘~분홍빛 + 밝은 바탕 그라데이션 */
+  background-image:
+    radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255, 193, 7, 0.35), transparent 45%),
+    radial-gradient(circle at calc(100% - var(--mouse-x)) calc(100% - var(--mouse-y)), hsl(var(--hue) 90% 80% / 0.5), transparent 50%),
+    linear-gradient(135deg, #fff8e1 0%, #fdf2f8 50%, #e0f2fe 100%);
+}
+
+/* 왼쪽 위 로고 */
+.header {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  z-index: 10;
+}
+
+.logo {
+  display: block;
+  width: auto;
+  height: 44px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(31, 41, 55, 0.12);
+}
+
+.main {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* URL 입력창: 처음엔 화면 가운데 */
+.input-area {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: min(600px, calc(100% - 32px));
+  transform: translate(-50%, -50%);
+  transition: top 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* QR코드를 만들면 입력창은 아래로 */
+.is-generated .input-area {
+  top: calc(100% - 90px);
+}
+
+.url-form {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 32px rgba(31, 41, 55, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.url-form:focus-within {
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.5), 0 8px 32px rgba(31, 41, 55, 0.08);
+}
+
+.url-input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 16px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 16px;
+}
+
+.url-input::placeholder {
+  color: #9ca3af;
+}
+
+.generate-button {
+  flex-shrink: 0;
+  padding: 0 24px;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #111111;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.generate-button:hover {
+  background: var(--accent-dark);
+  box-shadow: 0 4px 12px rgba(255, 179, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.generate-button:active {
+  transform: translateY(0);
+}
+
+.generate-button:focus-visible,
+.qr-button:focus-visible {
+  outline: 3px solid #111111;
+  outline-offset: 3px;
+}
+
+.message {
+  min-height: 1.5em;
+  margin-top: 10px;
+  color: var(--error);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* 생성된 QR코드: 화면 정중앙 */
+.qr-area {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0.92);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s;
+}
+
+.is-generated .qr-area {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.qr-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 20px 40px rgba(31, 41, 55, 0.12);
+}
+
+.qr-button {
+  display: block;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.qr-button:hover {
+  transform: scale(1.02);
+}
+
+.qr-canvas {
+  display: block;
+  width: min(260px, 60vw, 38vh);
+  height: auto;
+  border-radius: 8px;
+}
+
+.instruction {
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  word-break: keep-all; /* 한글이 단어 중간에서 줄바꿈되지 않게 */
+}
+
+.qr-url {
+  max-width: min(260px, 60vw);
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* 세로가 짧은 화면: QR코드와 입력창이 겹치지 않게 높이 확보 */
+@media (max-height: 620px) {
+  .main {
+    min-height: 620px;
+  }
+}
+
+/* 좁은 화면 */
+@media (max-width: 480px) {
+  .header {
+    top: 16px;
+    left: 16px;
+  }
+
+  .logo {
+    height: 36px;
+  }
+
+  .generate-button {
+    padding: 0 16px;
+  }
+}
+
+/* '동작 줄이기'를 켠 사용자에게는 애니메이션 없이 바로 표시 */
+@media (prefers-reduced-motion: reduce) {
+  .input-area,
+  .qr-area,
+  .generate-button,
+  .qr-button {
+    transition: none;
+  }
+}
